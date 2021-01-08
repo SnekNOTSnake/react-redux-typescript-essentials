@@ -1,22 +1,35 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addPost } from './postsSlice'
+import { selectUsers } from '../users/usersSlice'
 
 type InputChange = React.ChangeEvent<HTMLInputElement>
 type TextareaChange = React.ChangeEvent<HTMLTextAreaElement>
+type SelectChange = React.ChangeEvent<HTMLSelectElement>
 
 const AddPostForm: React.FC = () => {
 	const [title, setTitle] = React.useState('')
 	const [content, setContent] = React.useState('')
+	const [user, setUser] = React.useState('')
+
+	const users = useSelector(selectUsers)
 	const dispatch = useDispatch()
+	const canSave = title && content && user
 
 	const onTitleChanged = (e: InputChange) => setTitle(e.target.value)
 	const onContentChanged = (e: TextareaChange) => setContent(e.target.value)
+	const onUserChanged = (e: SelectChange) => setUser(e.target.value)
 	const submitHandler = () => {
-		dispatch(addPost({ title, content }))
+		dispatch(addPost(title, content, user))
 		setTitle('')
 		setContent('')
 	}
+
+	const renderUserOptions = users.map((user) => (
+		<option key={user.id} value={user.id}>
+			{user.name}
+		</option>
+	))
 
 	return (
 		<section>
@@ -37,7 +50,12 @@ const AddPostForm: React.FC = () => {
 					value={content}
 					onChange={onContentChanged}
 				/>
-				<button onClick={submitHandler} type="button">
+				<label htmlFor="postAuthor">Author:</label>
+				<select id="postAuthor" value={user} onChange={onUserChanged}>
+					<option value="">-</option>
+					{renderUserOptions}
+				</select>
+				<button disabled={!canSave} onClick={submitHandler} type="button">
 					Save Post
 				</button>
 			</form>

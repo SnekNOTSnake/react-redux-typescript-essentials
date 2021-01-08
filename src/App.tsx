@@ -9,6 +9,8 @@ import {
 import { Navbar } from './app/Navbar'
 import PostsList from './features/posts/PostsList'
 import AddPostForm from './features/posts/AddPostForm'
+import SinglePostPage from './features/posts/SinglePostPage'
+import EditPostForm from './features/posts/EditPostForm'
 
 const App: React.FC = () => {
 	return (
@@ -25,6 +27,16 @@ const App: React.FC = () => {
 								<AddPostForm />
 							</React.Fragment>
 						)}
+					/>
+					<Route
+						exact
+						path="/post/:id"
+						render={(props) => <SinglePostPage {...props} />}
+					/>
+					<Route
+						exact
+						path="/edit/:id"
+						render={(props) => <EditPostForm {...props} />}
 					/>
 					<Redirect to="/" />
 				</Switch>

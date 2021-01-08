@@ -1,14 +1,36 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { selectPosts } from './postsSlice'
+import PostAuthor from './PostAuthor'
+import PostDate from './PostDate'
+import ReactionButtons from './ReactionButtons'
 
 const PostsList: React.FC = () => {
 	const posts = useSelector(selectPosts)
+	const orderedPosts = posts.slice().sort((a, b) => b.date - a.date)
 
-	const renderPosts = posts.map((post) => (
+	const renderPosts = orderedPosts.map((post) => (
 		<article className="post-excerpt" key={post.id}>
 			<h3>{post.title}</h3>
+
+			<div>
+				<PostAuthor userId={post.user} />
+				<PostDate date={post.date} />
+			</div>
+
 			<p className="post-content">{post.content.substring(0, 100)}</p>
+
+			<div>
+				<Link to={`/post/${post.id}`} className="button muted-button">
+					Read more
+				</Link>
+				<Link to={`/edit/${post.id}`} className="button muted-button">
+					Edit
+				</Link>
+			</div>
+
+			<ReactionButtons post={post} />
 		</article>
 	))
 
