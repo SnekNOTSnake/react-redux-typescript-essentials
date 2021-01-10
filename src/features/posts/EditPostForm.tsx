@@ -1,7 +1,6 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
-import { RootState } from '../../app/store'
+import { useAppDispatch, useTypedSelector } from '../../app/store'
 import { updatePost } from './postsSlice'
 
 type Params = RouteComponentProps<{ id: string }>
@@ -9,13 +8,13 @@ type InputChange = React.ChangeEvent<HTMLInputElement>
 type TextareaChange = React.ChangeEvent<HTMLTextAreaElement>
 
 const EditPostForm: React.FC<Params> = ({ match, history }) => {
-	const post = useSelector((state: RootState) => {
+	const post = useTypedSelector((state) => {
 		return state.posts.find((el) => el.id === match.params.id)
 	})
 
 	const [title, setTitle] = React.useState(post?.title || '')
 	const [content, setContent] = React.useState(post?.content || '')
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 
 	const onTitleChanged = (e: InputChange) => setTitle(e.target.value)
 	const onContentChanged = (e: TextareaChange) => setContent(e.target.value)

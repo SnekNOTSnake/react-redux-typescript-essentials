@@ -1,17 +1,9 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { Post, Reaction } from '../../app/types'
+import { useAppDispatch } from '../../app/store'
 import { addReaction } from './postsSlice'
 
-interface Emojis {
-	[key: string]: string
-	thumbsUp: string
-	hooray: string
-	heart: string
-	rocket: string
-	eyes: string
-}
-
-const emojis: Emojis = {
+const emojis = {
 	thumbsUp: '👍',
 	hooray: '🎉',
 	heart: '❤️',
@@ -24,20 +16,20 @@ type Props = {
 }
 
 const ReactionButtons: React.FC<Props> = ({ post }) => {
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 
-	const renderButtons = Object.keys(emojis).map((emoji) => (
+	const renderButtons = Object.entries(emojis).map(([name, emoji]) => (
 		<button
 			onClick={() =>
 				dispatch(
-					addReaction({ postId: post.id, reaction: emoji as ReactionType }),
+					addReaction({ postId: post.id, reaction: name as keyof Reaction }),
 				)
 			}
-			key={emoji}
+			key={name}
 			className="muted-butt	on reaction-button"
 			type="button"
 		>
-			{emojis[emoji]} {post.reactions[emoji]}
+			{emoji} {post.reactions[name as keyof Reaction]}
 		</button>
 	))
 

@@ -1,13 +1,12 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../app/store'
+import { useTypedSelector } from '../../app/store'
 
-type Params = RouteComponentProps<{ id: string }>
+type Props = RouteComponentProps<{ id: string }>
 
-const SinglePostPage: React.FC<Params> = ({ match }) => {
+const SinglePostPage: React.FC<Props> = ({ match }) => {
 	const { id } = match.params
-	const post = useSelector((state: RootState) =>
+	const post = useTypedSelector((state) =>
 		state.posts.find((el) => el.id === id),
 	)
 

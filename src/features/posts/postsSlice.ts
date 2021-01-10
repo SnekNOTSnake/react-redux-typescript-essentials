@@ -1,27 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '../../app/store'
+import { Post, Reaction } from '../../app/types'
 
-interface AddPayload {
-	id: string
-	title: string
-	content: string
-	date: number
-	user: string
-	reactions: Reactions
-}
-
-interface UpdatePayload {
-	id: string
-	title: string
-	content: string
-}
-
-interface ReactionPayload {
-	postId: string
-	reaction: ReactionType
-}
-
-const createInitReactions = (): Reactions => ({
+const createInitReactions = (): Reaction => ({
 	eyes: 0,
 	heart: 0,
 	hooray: 0,
@@ -49,8 +29,9 @@ const postSlice = createSlice({
 	name: 'posts',
 	initialState,
 	reducers: {
+		// Actions (Don't try to mutate any data outside of createSlice)
 		addPost: {
-			reducer: (state, action: PayloadAction<AddPayload>) => {
+			reducer: (state, action: PayloadAction<Post>) => {
 				const { id, title, content, user, date, reactions } = action.payload
 				state.push({ id, title, content, user, date, reactions })
 			},
@@ -67,7 +48,10 @@ const postSlice = createSlice({
 				}
 			},
 		},
-		updatePost: (state, action: PayloadAction<UpdatePayload>) => {
+		updatePost: (
+			state,
+			action: PayloadAction<Pick<Post, 'id' | 'content' | 'title'>>,
+		) => {
 			const { id, title, content } = action.payload
 			const post = state.find((el) => el.id === id)
 			if (post) {
@@ -75,7 +59,10 @@ const postSlice = createSlice({
 				post.content = content
 			}
 		},
-		addReaction: (state, action: PayloadAction<ReactionPayload>) => {
+		addReaction: (
+			state,
+			action: PayloadAction<{ postId: string; reaction: keyof Reaction }>,
+		) => {
 			const { postId, reaction } = action.payload
 			const post = state.find((el) => el.id === postId)
 			if (!post) return state
@@ -89,6 +76,3 @@ export const { addPost, updatePost, addReaction } = postSlice.actions
 
 // Reducer
 export default postSlice.reducer
-
-// Selector
-export const selectPosts = (state: RootState) => state.posts

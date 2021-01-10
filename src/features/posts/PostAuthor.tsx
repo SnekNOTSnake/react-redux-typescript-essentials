@@ -1,13 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../app/store'
+import { useTypedSelector } from '../../app/store'
 
 type Props = {
 	userId?: string
 }
 
 const PostAuthor: React.FC<Props> = ({ userId }) => {
-	const author = useSelector((state: RootState) =>
+	const author = useTypedSelector((state) =>
 		state.users.find((el) => el.id === userId),
 	)
 

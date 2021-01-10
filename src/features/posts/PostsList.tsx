@@ -1,13 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { selectPosts } from './postsSlice'
+import { useTypedSelector } from '../../app/store'
 import PostAuthor from './PostAuthor'
 import PostDate from './PostDate'
 import ReactionButtons from './ReactionButtons'
 
 const PostsList: React.FC = () => {
-	const posts = useSelector(selectPosts)
+	const posts = useTypedSelector((state) => state.posts)
 	const orderedPosts = posts.slice().sort((a, b) => b.date - a.date)
 
 	const renderPosts = orderedPosts.map((post) => (

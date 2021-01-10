@@ -1,7 +1,6 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useTypedSelector, useAppDispatch } from '../../app/store'
 import { addPost } from './postsSlice'
-import { selectUsers } from '../users/usersSlice'
 
 type InputChange = React.ChangeEvent<HTMLInputElement>
 type TextareaChange = React.ChangeEvent<HTMLTextAreaElement>
@@ -12,8 +11,8 @@ const AddPostForm: React.FC = () => {
 	const [content, setContent] = React.useState('')
 	const [user, setUser] = React.useState('')
 
-	const users = useSelector(selectUsers)
-	const dispatch = useDispatch()
+	const users = useTypedSelector((state) => state.users)
+	const dispatch = useAppDispatch()
 	const canSave = title && content && user
 
 	const onTitleChanged = (e: InputChange) => setTitle(e.target.value)

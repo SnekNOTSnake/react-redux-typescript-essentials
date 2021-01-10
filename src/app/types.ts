@@ -1,16 +1,18 @@
-interface Post {
+export interface Post {
 	id: string
 	title: string
 	content: string
 	date: number
 	user?: string
-	reactions: Reactions
+	reactions: Reaction
 }
 
-type ReactionType = 'thumbsUp' | 'hooray' | 'heart' | 'rocket' | 'eyes'
+export interface User {
+	id: string
+	name: string
+}
 
-interface Reactions {
-	[key: string]: number
+export interface Reaction {
 	thumbsUp: number
 	hooray: number
 	heart: number
