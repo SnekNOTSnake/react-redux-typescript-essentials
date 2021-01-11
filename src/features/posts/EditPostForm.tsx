@@ -1,16 +1,15 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { useAppDispatch, useTypedSelector } from '../../app/store'
-import { updatePost } from './postsSlice'
+import { updatePost, selectPostById } from './postsSlice'
 
 type Params = RouteComponentProps<{ id: string }>
 type InputChange = React.ChangeEvent<HTMLInputElement>
 type TextareaChange = React.ChangeEvent<HTMLTextAreaElement>
 
 const EditPostForm: React.FC<Params> = ({ match, history }) => {
-	const post = useTypedSelector((state) => {
-		return state.posts.find((el) => el.id === match.params.id)
-	})
+	const { id } = match.params
+	const post = useTypedSelector((state) => selectPostById(state, id))
 
 	const [title, setTitle] = React.useState(post?.title || '')
 	const [content, setContent] = React.useState(post?.content || '')

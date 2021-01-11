@@ -1,14 +1,13 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { useTypedSelector } from '../../app/store'
+import { selectPostById } from './postsSlice'
 
 type Props = RouteComponentProps<{ id: string }>
 
 const SinglePostPage: React.FC<Props> = ({ match }) => {
 	const { id } = match.params
-	const post = useTypedSelector((state) =>
-		state.posts.find((el) => el.id === id),
-	)
+	const post = useTypedSelector((state) => selectPostById(state, id))
 
 	if (!post)
 		return (

@@ -3,7 +3,7 @@ export interface Post {
 	title: string
 	content: string
 	date: number
-	user?: string
+	user: string
 	reactions: Reaction
 }
 
@@ -18,4 +18,10 @@ export interface Reaction {
 	heart: number
 	rocket: number
 	eyes: number
+}
+
+export interface AsyncState<T> {
+	status: 'idle' | 'loading' | 'success' | 'failed'
+	error: string | null
+	entries: T[]
 }

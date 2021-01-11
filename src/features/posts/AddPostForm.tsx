@@ -1,6 +1,7 @@
 import React from 'react'
+import { unwrapResult } from '@reduxjs/toolkit'
 import { useTypedSelector, useAppDispatch } from '../../app/store'
-import { addPost } from './postsSlice'
+import { addNewPost } from './postsSlice'
 
 type InputChange = React.ChangeEvent<HTMLInputElement>
 type TextareaChange = React.ChangeEvent<HTMLTextAreaElement>
@@ -10,21 +11,33 @@ const AddPostForm: React.FC = () => {
 	const [title, setTitle] = React.useState('')
 	const [content, setContent] = React.useState('')
 	const [user, setUser] = React.useState('')
+	const [addRequestStatus, setAddRequestStatus] = React.useState('idle')
 
 	const users = useTypedSelector((state) => state.users)
 	const dispatch = useAppDispatch()
-	const canSave = title && content && user
+	const canSave = title && content && user && addRequestStatus === 'idle'
 
 	const onTitleChanged = (e: InputChange) => setTitle(e.target.value)
 	const onContentChanged = (e: TextareaChange) => setContent(e.target.value)
 	const onUserChanged = (e: SelectChange) => setUser(e.target.value)
-	const submitHandler = () => {
-		dispatch(addPost(title, content, user))
-		setTitle('')
-		setContent('')
+	const submitHandler = async () => {
+		if (!canSave) return
+
+		try {
+			setAddRequestStatus('loading')
+			const resultAction = await dispatch(addNewPost({ title, content, user }))
+			unwrapResult(resultAction)
+			setTitle('')
+			setContent('')
+			setUser('')
+		} catch (err) {
+			console.error(err)
+		} finally {
+			setAddRequestStatus('idle')
+		}
 	}
 
-	const renderUserOptions = users.map((user) => (
+	const renderUserOptions = users.entries.map((user) => (
 		<option key={user.id} value={user.id}>
 			{user.name}
 		</option>
