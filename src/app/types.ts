@@ -28,9 +28,3 @@ export interface Notification {
 	read: boolean
 	isNew: boolean
 }
-
-export interface AsyncState<T> {
-	status: 'idle' | 'loading' | 'success' | 'failed'
-	error: string | null
-	entries: T[]
-}
