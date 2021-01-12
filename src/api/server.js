@@ -35,7 +35,7 @@ if (useSeededRNG) {
 		seedDate = new Date(randomSeedString)
 	} else {
 		seedDate = new Date()
-		randomSeedString = seedDate.getTime()
+		randomSeedString = seedDate.toISOString()
 		localStorage.setItem('randomTimestampSeed', randomSeedString)
 	}
 
@@ -65,7 +65,7 @@ const notificationTemplates = [
 new Server({
 	routes() {
 		this.namespace = 'fakeApi'
-		this.timing = 2000
+		//this.timing = 2000
 
 		this.resource('users')
 		this.resource('posts')
@@ -75,7 +75,7 @@ new Server({
 
 		this.post('/posts', function (schema, req) {
 			const data = this.normalizedRequestAttrs()
-			data.date = new Date().getTime()
+			data.date = new Date().toISOString()
 			// Work around some odd behavior by Mirage that's causing an extra
 			// user entry to be created unexpectedly when we only supply a userId.
 			// It really want an entire Model passed in as data.user for some reason.
@@ -116,7 +116,7 @@ new Server({
 				const template = randomFromArray(notificationTemplates)
 				return {
 					id: nanoid(),
-					date: faker.date.between(pastDate, now).getTime(),
+					date: faker.date.recent().getTime(),
 					message: template,
 					user: user.id,
 					read: false,
@@ -195,7 +195,7 @@ new Server({
 				return nanoid()
 			},
 			date() {
-				return faker.date.past(2).getTime()
+				return faker.date.past(2)
 			},
 			text() {
 				return paragraph()

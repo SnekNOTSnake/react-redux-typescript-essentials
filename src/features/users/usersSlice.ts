@@ -1,12 +1,18 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import {
+	createSlice,
+	createAsyncThunk,
+	createEntityAdapter,
+} from '@reduxjs/toolkit'
+import { RootState } from '../../app/store'
 import { client } from '../../api/client'
-import { User, AsyncState } from '../../app/types'
+import { User } from '../../app/types'
 
-const initialState: AsyncState<User> = {
-	entries: [],
+// Adapter
+const usersAdapter = createEntityAdapter<User>()
+const initialState = usersAdapter.getInitialState({
 	status: 'idle',
 	error: null,
-}
+})
 
 // Thunk
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
@@ -24,7 +30,7 @@ const usersSlice = createSlice({
 		},
 		[fetchUsers.fulfilled.type]: (state, action) => {
 			state.status = 'success'
-			state.entries = state.entries.concat(action.payload)
+			usersAdapter.upsertMany(state, action.payload)
 		},
 		[fetchUsers.rejected.type]: (state, action) => {
 			state.status = 'failed'
@@ -34,4 +40,7 @@ const usersSlice = createSlice({
 })
 
 export default usersSlice.reducer
-// export const {} = usersSlice.actions
+export const {
+	selectAll: selectAllUsers,
+	selectById: selectUserById,
+} = usersAdapter.getSelectors((state: RootState) => state.users)

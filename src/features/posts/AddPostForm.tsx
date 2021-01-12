@@ -2,6 +2,7 @@ import React from 'react'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { useTypedSelector, useAppDispatch } from '../../app/store'
 import { addNewPost } from './postsSlice'
+import { selectAllUsers } from '../users/usersSlice'
 
 type InputChange = React.ChangeEvent<HTMLInputElement>
 type TextareaChange = React.ChangeEvent<HTMLTextAreaElement>
@@ -13,7 +14,7 @@ const AddPostForm: React.FC = () => {
 	const [user, setUser] = React.useState('')
 	const [addRequestStatus, setAddRequestStatus] = React.useState('idle')
 
-	const users = useTypedSelector((state) => state.users)
+	const users = useTypedSelector(selectAllUsers)
 	const dispatch = useAppDispatch()
 	const canSave = title && content && user && addRequestStatus === 'idle'
 
@@ -37,7 +38,7 @@ const AddPostForm: React.FC = () => {
 		}
 	}
 
-	const renderUserOptions = users.entries.map((user) => (
+	const renderUserOptions = users.map((user) => (
 		<option key={user.id} value={user.id}>
 			{user.name}
 		</option>
